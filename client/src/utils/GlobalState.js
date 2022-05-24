@@ -14,11 +14,13 @@ const { Provider } = StoreContext;
 // create a custom provider function that will be used to manage and update 
 // our state using the reducer
 const StoreProvider = ({ value = [], ...props }) => {
-    const [state, dispatch] = useProductReducer({
-      products: [],
-      categories: [],
-      currentCategory: '',
-    });
+  const [state, dispatch] = useProductReducer({
+    products: [],
+    cart: [],
+    cartOpen: false,
+    categories: [],
+    currentCategory: ''
+  });
     // use this to confirm it works!
     console.log(state);
     return <Provider value={[state, dispatch]} {...props} />;
