@@ -1,11 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
-import { useQuery } from '@apollo/client';
 
+import { useQuery } from '@apollo/client';
 import { QUERY_PRODUCTS } from '../utils/queries';
+
 import spinner from '../assets/spinner.gif';
 
+// make the global state available to this page
 import { useStoreContext } from "../utils/GlobalState";
+// import the particular state functions to the file
 import {
   REMOVE_FROM_CART,
   UPDATE_CART_QUANTITY,
