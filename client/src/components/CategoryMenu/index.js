@@ -3,6 +3,7 @@ import { QUERY_CATEGORIES } from '../../utils/queries';
 import { useStoreContext } from "../../utils/GlobalState";
 import React, { useEffect } from 'react';
 import { UPDATE_CATEGORIES, UPDATE_CURRENT_CATEGORY } from '../../utils/actions';
+import { idbPromise } from '../../utils/helpers';
 
 function CategoryMenu({ }) {
   // const { data: categoryData } = useQuery(QUERY_CATEGORIES);
@@ -14,7 +15,7 @@ function CategoryMenu({ }) {
   // need the catagories array so we destructure it out
   const { categories } = state;
 
-  const { data: categoryData } = useQuery(QUERY_CATEGORIES);
+  const { loading, data: categoryData } = useQuery(QUERY_CATEGORIES);
 
 // use the dispatch() method to set our global state with categoryData
 // when useQuery() finishes, and we have data in categoryData, the 
@@ -29,8 +30,20 @@ function CategoryMenu({ }) {
         type: UPDATE_CATEGORIES,
         categories: categoryData.categories
       });
+
+      categoryData.categories.forEach(category => {
+        idbPromise('categories', 'put', category);
+      });
+
+    } else if (!loading) {
+      idbPromise('categories', 'get').then(categories => {
+        dispatch({
+          type: UPDATE_CATEGORIES,
+          categories: categories
+        });
+      });
     }
-  }, [categoryData, dispatch]);
+  }, [categoryData, loading, dispatch]);
 
   // update the global state using click handler instead of the Home useState updater f(x)
   const handleClick = id => {
